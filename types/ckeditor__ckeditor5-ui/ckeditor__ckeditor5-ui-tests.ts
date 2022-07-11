@@ -70,6 +70,15 @@ view.isRendered === bool;
 let template: Template;
 template = view.template as Template;
 
+view.on('foo', (ev, ...args) => {
+    // $ExpectType EventInfo<View, "foo">
+    ev;
+    // $ExpectType any[]
+    args;
+});
+
+view.set('foo');
+
 let htmlelement = template.render() as HTMLElement;
 
 let locale: Locale = new Locale();
@@ -132,13 +141,22 @@ viewCollection.get(0) === null;
 viewCollection.get(0);
 viewCollection.setParent(htmlelement);
 viewCollection.add(view);
-// $ExpectError
+// @ts-expect-error
 viewCollection.add([view]);
 viewCollection.addMany([view]);
 viewCollection.remove(view);
-// $ExpectError
+// @ts-expect-error
 viewCollection.remove([view]);
 viewCollection.destroy();
+
+viewCollection.on('foo', (ev, ...args) => {
+    // $ExpectType EventInfo<ViewCollection<View>, "foo">
+    ev;
+    // $ExpectType any[]
+    args;
+});
+
+viewCollection.set('foo');
 
 /**
  * Template
@@ -199,7 +217,7 @@ class MyModel extends Model {}
 const model = new MyModel();
 model.set({ a: 4 });
 model.a;
-// $ExpectError
+// @ts-expect-error
 model.a = num;
 
 /**
@@ -209,7 +227,7 @@ const listView = new ListView(locale);
 listView.focus();
 listView.destroy();
 let focusTracker: FocusTracker = listView.focusTracker;
-// $ExpectError
+// @ts-expect-error
 listView.focusTracker as ListView;
 
 /**
@@ -345,7 +363,7 @@ viewCollection = boxedEditor.main;
  */
 // $ExpectType boolean
 new InlineEditableUIView(locale, view)._hasExternalElement;
-// $ExpectError
+// @ts-expect-error
 new InlineEditableUIView(locale, view)._hasExternalElement = true;
 
 /**
@@ -528,8 +546,8 @@ new InputView(locale).destroy();
 new InputView(locale).id;
 // $ExpectType string
 new InputView(locale).placeholder;
-// $ExpectError
-new InputView(locale).placeholder = "";
+// @ts-expect-error
+new InputView(locale).placeholder = '';
 new InputView(locale).destroy();
 new InputView(locale).focus();
 
@@ -541,8 +559,8 @@ new InputNumberView(locale).destroy();
 new InputNumberView(locale).id;
 // $ExpectType string
 new InputNumberView(locale).placeholder;
-// $ExpectError
-new InputNumberView(locale).placeholder = "";
+// @ts-expect-error
+new InputNumberView(locale).placeholder = '';
 new InputNumberView(locale).destroy();
 new InputNumberView(locale).focus();
 // $ExpectType number | undefined
@@ -551,7 +569,7 @@ new InputNumberView(locale).min;
 new InputNumberView(locale).step;
 
 // $ExpectType InputNumberView
-createLabeledInputNumber(labeledfieldview, "", "");
+createLabeledInputNumber(labeledfieldview, '', '');
 
 // $ExpectType BalloonToolbar
 editor.plugins.get('BalloonToolbar');
